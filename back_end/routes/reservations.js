@@ -1,26 +1,26 @@
-const express = require('express');
-const Reservation = require('../models/Reservation');
+const express = require("express");
+const Reservation = require("../models/Restaurant");
 const router = express.Router();
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 
-router.get('/reservations', async (req, res) => {
-    const { location, dateTime, guests } = req.query;
+router.get("/reservations", async (req, res) => {
+  const { location, dateTime, guests } = req.query;
 
-    const reservations = await Reservation.findAll({
-        where: {
-            location: {
-                [Op.like]: `%${location}%`
-            },
-            dateTime: {
-                [Op.eq]: dateTime
-            },
-            guests: {
-                [Op.lte]: guests
-            }
-        }
-    });
+  const reservations = await Reservation.findAll({
+    where: {
+      location: {
+        [Op.like]: `%${location}%`,
+      },
+      dateTime: {
+        [Op.lte]: dateTime,
+      },
+      guests: {
+        [Op.gte]: guests,
+      },
+    },
+  });
 
-    res.json(reservations);
+  res.json(reservations);
 });
 
 module.exports = router;
